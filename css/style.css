@@ -1,3 +1,7 @@
+* {
+    font-family: Helvetica, arial, sans-serif;
+}
+
 .widget.container {
     position: relative;
     width: 1200px;
