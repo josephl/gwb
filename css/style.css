@@ -1,0 +1,40 @@
+.widget.container {
+    position: relative;
+    width: 1200px;
+    height: 600px;
+}
+
+.graph.widget {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 800px;
+    height: 600px;
+}
+
+.widget.container .panel.container {
+    float: right;
+    width: 400px;
+    height: 600px;
+}
+
+.panel.widget {
+    float: right;
+    background-color: #eee;
+    width: 400px;
+    height: 280px;
+    margin: 6px;
+    text-align: center;
+}
+
+.panel.text {
+    position: relative;
+    top: 50%;
+    height: 40px;
+    margin-top: -20px;
+}
+
+.panel.text p {
+    font-size: 20px;
+    margin: 0 0 0 0;
+}
