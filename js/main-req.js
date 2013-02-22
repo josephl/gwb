@@ -24,6 +24,9 @@ requirejs.config({
             deps: ['libs/jquery.flot']
         },
         'libs/crossfilter': {},
+        'libs/graphite': {
+            deps: ['libs/jquery', 'libs/underscore']
+        },
         'models/model': {
             deps: ['libs/jquery', 'libs/backbone', 'libs/crossfilter',
             'libs/jquery.flot', 'libs/jquery.flot.time',
@@ -35,7 +38,8 @@ requirejs.config({
             'libs/jquery.flot.stack']
         },
         'script': {
-            deps: ['libs/jquery', 'models/model', 'views/view']
+            deps: ['libs/jquery', 'models/model', 'views/view',
+            'libs/graphite']
         }
     }
 });
