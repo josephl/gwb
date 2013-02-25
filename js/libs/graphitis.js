@@ -1,39 +1,16 @@
-// Graphite.js
+// Graphitis.js
 // Graphite URL API Handler
 // Idealist.org
 
-// Instantiate new Graphite object with an 'options' object parameter
-// A URL will be generated with the specified options,
-// just call object.ajax()
-
-// e.g.
-// https://graphite.dev.awbdev.org/render?target=statsd.lomo.i3.signup.attempts\
-//     &format=json&from=-2d&until=-1d
-// var graphite = new Graphite({
-//     baseUrl: 'https://graphite.dev.awbdev.org',  *
-//     targets: ['statsd.lomo.i3.signup.attempts'], *
-//     success: function(d) { ... },                *
-//     format: 'json',
-//     from: '-2d',
-//     until: '-1d'
-// });
-//                                                  * = required field
-
-// TODO: allow for input of complete url, parse backwards
-
 (function($) {
 
-    /* 
-     * valid options: from, until (requires from), 
-     *     
-     */
-    Graphite = function (options) {
+    Graphitis = function (options) {
         this.options = options;
         this.generateUrl();
+        return this;
     };
 
-    /* generate graphite-compliant url */
-    Graphite.prototype.generateUrl = function() {
+    Graphitis.prototype.generateUrl = function() {
         var that = this;
         this.url = '';
         var reqkeys = ['baseUrl', 'targets', 'success'];
@@ -42,14 +19,13 @@
             var ki = keys.indexOf(reqkeys[i]);
             keys.splice(ki, ki !== 0 ? ki : ki + 1);
         }
-        // http[s]:// url prefix
         if (this.options.baseUrl.match(/^http[s]{0,1}:\/\//) === null) {
             this.url = 'http://' + this.options.baseUrl;
         }
         else {
             this.url = this.options.baseUrl;
         }
-        if (this.url[this.url.length - 1] !== '/') {
+        if (this.url.match(/\/$/) === null) {
             this.url += '/';
         }
         this.url += 'render?';
@@ -57,27 +33,25 @@
             '[object Array]') {
             this.url += 'target=' + this.options.targets.join('&target=');
         }
-        else {      // singular string target
+        else {
             this.url += 'target=' + targets;
         }
-        // parse options
         keys.forEach(function(key) {
             that.url += '&' + key + '=' + that.options[key];
         });
-        // cross domain policy for jsonp
         if (this.options.format === 'json' &&
             typeof this.options.jsonp === 'undefined') {
             this.url += '&jsonp=?';
         }
+        return this;
     }
 
-    /* define jquery ajax call */
-    Graphite.prototype.ajax = function() {
+    Graphitis.prototype.ajax = function() {
         var that = this;
         var ajaxOptions = {
             url: that.url,
-            dataType: that.options.format,
-            success: that.options.success
+            dataType: this.options.format,
+            success: this.options.success
         };
         if (this.options.format === 'json' &&
             typeof this.options.jsonp === 'undefined') {
@@ -87,6 +61,32 @@
             ajaxOptions.format = 'text';
         }
         $.ajax(ajaxOptions);
+        return this;
     };
+
+    Graphite.prototype.set = function(param, value) {
+        var objType = Object.prototype.toString.call(param);
+        if (objType === '[object Object]' && typeof value === 'undefined') {
+            keys = Object.keys(param);
+            for (var k = 0; k < keys.length; k++) {
+                this.options[keys[k]] = param[keys[k]];
+            }
+        }
+        else if (objType === '[object String]') {
+            this.options[param] = value;
+        }
+        this.generateUrl();
+        return this;
+    }
+
+    Graphite.prototype.get = function(key) {
+        if (typeof key === 'undefined') {
+            return this.options;
+        }
+        else if (key === 'url') {
+            return this.url;
+        }
+        return this.options[key];
+    }
 
 }) (jQuery);
