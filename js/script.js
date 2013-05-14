@@ -76,8 +76,6 @@
     function requestRange() {
         var rangeOptions = $.extend(true, {}, dataOptions);
         rangeOptions.from = '0';
-        console.log(dataOptions);
-        console.log(rangeOptions);
         $.ajax({
             url: 'http://devenv.dev.sys:5000/data',
             data: rangeOptions,
@@ -113,10 +111,12 @@
         requestMain();
     }
     function onPlotUnselect(event) {
+        // refresh main and range graphs
         console.log('onPlotUnselect');
         delete dataOptions.from;
         delete dataOptions.until;
         requestMain();
+        requestRange();
     }
 
 })(jQuery);
