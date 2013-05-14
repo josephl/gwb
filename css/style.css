@@ -8,12 +8,10 @@
     height: 900px;
 }
 
-/*
-.graph.widget {
-    top: 0;
-    left: 0;
-    width: 900px;
-}*/
+.graph.pie {
+    display: none;
+    height: 300px;
+}
 
 .main.graph.widget {
     height: 600px;
@@ -29,12 +27,9 @@
     height: 600px;
 }
 
-.dayRange {
-    width: 200px;
-}
-
 .controls {
-    margin: 10px;
+    margin-top: 40px;
+    margin-left: 30px;
 }
 
 .ui-slider {

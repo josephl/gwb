@@ -1,14 +1,27 @@
 (function($) {
+    var dataOptions = {
+        //target: 'statsd.yastatsd.*.count'
+        target: ['bitcoin.avg', 'bitcoin.high', 'bitcoin.low'],
+        //target: 'statsd.lomo.xapian.*.timer.*.count'
+        //target: ['statsd.lomo.i3.signup.attempts', 'statsd.lomo.i3.signup.password.mismatch']
+    };
 
     var mainGraphWidget = $('.main.graph.widget');
     var rangeGraphWidget = $('.range.graph.widget');
     var widgetContainer = $('.widget.container');
-    //var dayRange = $('.dayRange').slider({
-    //    range: true,
-    //    min: 0,
-    //    max: 24,
-    //    values: [0, 24]
-    //});
+    var pieGraph = $('.graph.pie');
+    var dayRange = $('.dayRange').slider({
+        range: true,
+        min: 0,
+        max: 24,
+        values: [0, 24],
+        change: function (event, ui) {
+            console.log(ui.values);
+            dataOptions.dayStart = ui.values[0];
+            dataOptions.dayEnd = ui.values[1];
+            requestMain();
+        }
+    });
 
     var flotOptions = {
         series: { 
@@ -22,7 +35,7 @@
             autoHighlight: true,
         },
         xaxis: { mode: 'time', timezone: 'browser' },
-        legend: { position: 'nw' },
+        legend: { position: 'ne' },
         selection: { mode: 'x' }
     };
     var flotRangeOptions = {
@@ -41,12 +54,6 @@
         selection: { mode: 'x' }
     };
 
-    var dataOptions = {
-        target: 'statsd.yastatsd.*.count'
-        //target: 'bitcoin.avg'
-    };
-    console.log(dataOptions.target);
-
     // selection event
     rangeGraphWidget.bind('plotselected', onPlotSelect);
     rangeGraphWidget.bind('plotunselected', onPlotUnselect);
@@ -59,6 +66,7 @@
     window.rangePlot = rangePlot;
     /* AJAX request for main graph */
     function requestMain() {
+        console.log(dataOptions);
         $.ajax({
             url: 'http://devenv.dev.sys:5000/data',
             data: dataOptions,
@@ -67,6 +75,7 @@
                 window.mainPlot = $.plot(mainGraphWidget,
                                          data.results,
                                          flotOptions);
+                renderStats(data.stats);
             }
         });
         console.log('requestMain');
@@ -101,6 +110,28 @@
     }
     update();
 
+    /* Stats panel */
+    function renderStats(stats) {
+        console.log(stats);
+        // pie chart
+        if (stats.length > 1) {
+            var pieData = _.map(stats, function(d) { return d.sum; });
+            console.log(pieData);
+            pieGraph.css('display', 'inline');
+            $.plot(pieGraph, pieData, {
+                series: {
+                    pie: {
+                        show: true,
+                        innerRadius: 0.65
+                    },
+                },
+                grid: {
+                    clickable: true,
+                    hoverable: true
+                }
+            });
+        }
+    }
 
     /* Selection Handlers */
     function onPlotSelect(event, ranges) {
