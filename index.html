@@ -10,6 +10,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script data-main="js/main-req" src="js/libs/require.js"></script>
@@ -20,10 +21,22 @@
     <![endif]-->
 
     <div class="widget container">
-        <div class="main graph widget"></div>
-        <div class="range graph widget"></div>
-        <div class="controls">
-            <div class="dayRange" style="width:300px;"></div>
+        <div class="row">
+            <!-- left column -->
+            <div class="graph container span9">
+                <div class="main graph widget span9"></div>
+                <div class="range graph widget span9"></div>
+                <!--
+                <div class="controls">
+                    <div class="dayRange" style="width:300px;"></div>
+                </div> -->
+            </div>
+            <!-- right column -->
+            <div class="panel span2">
+                <div class="span2">
+                    Testing
+                </div>
+            </div>
         </div>
     </div>
 
