@@ -3,6 +3,9 @@
 
 requirejs.config({
     shim: {
+        //'libs/jquery': {
+        //    exports: '$'
+        //},
         'libs/underscore': {
             exports: '_'
         },
@@ -10,42 +13,43 @@ requirejs.config({
             deps: ['libs/underscore', 'libs/jquery'],
             exports: 'Backbone'
         },
-        'libs/d3': {
-            deps: ['libs/jquery'],
-            exports: 'd3'
-        },
-        'libs/jquery.flot': {
+        'libs/jquery-ui': {
             deps: ['libs/jquery']
         },
-        'libs/jquery.flot.time': {
-            deps: ['libs/jquery.flot'],
+        'libs/jquery.flot': {
+            deps: ['libs/jquery'],
+            exports: 'plot'
         },
-        'libs/jquery.flot.stack': {
+        'libs/jquery.flot.time': {
             deps: ['libs/jquery.flot']
         },
-        'libs/crossfilter': {},
-        'libs/graphite': {
-            deps: ['libs/jquery', 'libs/underscore']
+        'libs/jquery.flot.selection': {
+            deps: ['libs/jquery.flot']
         },
-        'models/model': {
-            deps: ['libs/jquery', 'libs/backbone', 'libs/crossfilter',
-            'libs/jquery.flot', 'libs/jquery.flot.time',
-            'libs/jquery.flot.stack']
-        },
-        'views/view': {
-            deps: ['libs/jquery', 'libs/backbone', 'libs/crossfilter',
-            'libs/jquery.flot', 'libs/jquery.flot.time',
-            'libs/jquery.flot.stack']
-        },
+//        'libs/jquery.flot.stack': {
+//            deps: ['libs/jquery.flot']
+//        },
+//        'models/model': {
+//            deps: ['libs/jquery', 'libs/backbone',
+//            'libs/jquery.flot', 'libs/jquery.flot.time',
+//            'libs/jquery.flot.stack']
+//        },
+//        'views/ctrl': {
+//            deps: ['libs/jquery', 'libs/backbone',
+//            'libs/jquery.flot', 'libs/jquery.flot.time',
+//            'libs/jquery.flot.stack']
+//        },
         'script': {
-            deps: ['libs/jquery', 'models/model', 'views/view',
-            'libs/graphite']
+            deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
+                   'libs/jquery.flot.time', 'libs/jquery.flot.selection']
         }
     }
 });
 
 define(
-    ['libs/underscore', 'libs/backbone', 'libs/d3', 'script'],
-    function(underscoreLocal, backboneLocal, d3Local) {
+    ['libs/underscore', 'libs/backbone', 'libs/jquery-ui', 'libs/jquery.flot',
+     'libs/jquery.flot.time', 'libs/jquery.flot.selection', 'script'],
+    function(underscoreLocal, backboneLocal, uiLocal, flotLocal,
+        flotTimeLocal, flotSelectionLocal, scriptLocal) {
     }
 );
