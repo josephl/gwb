@@ -1,8 +1,8 @@
 (function($) {
     var dataOptions = {
         //target: 'statsd.yastatsd.*.count'
-        target: ['bitcoin.avg', 'bitcoin.high', 'bitcoin.low'],
-        //target: 'statsd.lomo.xapian.*.timer.*.count'
+        //target: ['bitcoin.avg', 'bitcoin.high', 'bitcoin.low'],
+        target: 'statsd.lomo.xapian.*.timer.*.count'
         //target: ['statsd.lomo.i3.signup.attempts', 'statsd.lomo.i3.signup.password.mismatch']
     };
 
@@ -23,9 +23,15 @@
         }
     });
 
+    /*
+     * Flot Graph Options
+     */
     var flotOptions = {
         series: { 
-            lines: { show: true },
+            lines: {
+                show: true,
+                lineWidth: 1.25
+            },
             shadowSize: 0
         },
         grid: {
@@ -40,7 +46,10 @@
     };
     var flotRangeOptions = {
         series: { 
-            lines: { show: true },
+        lines: {
+            show: true,
+            lineWidth: 0.75
+        },
             shadowSize: 0
         },
         grid: {
@@ -58,7 +67,7 @@
     rangeGraphWidget.bind('plotselected', onPlotSelect);
     rangeGraphWidget.bind('plotunselected', onPlotUnselect);
     mainGraphWidget.bind('plotselected', onPlotSelect);
-    mainGraphWidget.bind('plotunselected', onPlotUnselect);
+    //mainGraphWidget.bind('plotunselected', onPlotUnselect);
 
     var mainPlot, rangePlot;    // plot objects
     // temp debug
@@ -72,10 +81,11 @@
             data: dataOptions,
             jsonp: 'jsonp',
             success: function(data) {
+                console.log('data received');
                 window.mainPlot = $.plot(mainGraphWidget,
                                          data.results,
                                          flotOptions);
-                renderStats(data.stats);
+                renderStats(data);
             }
         });
         console.log('requestMain');
@@ -111,24 +121,33 @@
     update();
 
     /* Stats panel */
-    function renderStats(stats) {
-        console.log(stats);
+    function renderStats(dataset) {
+        console.log(dataset);
         // pie chart
-        if (stats.length > 1) {
-            var pieData = _.map(stats, function(d) { return d.sum; });
-            console.log(pieData);
+        if (dataset.results.length > 1) {
+            //var pieData = _.map(dataset.stats, function(d) { return d.sum; });
+            //console.log(pieData);
+            var pieData = [];
             pieGraph.css('display', 'inline');
+            for (var i = 0; i < dataset.results.length; i++) {
+                pieData.push({
+                    data: dataset.stats[i].sum,
+                    //label: dataset.results[i].label
+                    label: ''
+                });
+            }
             $.plot(pieGraph, pieData, {
                 series: {
                     pie: {
                         show: true,
-                        innerRadius: 0.65
+                        //innerRadius: 0.65
                     },
                 },
                 grid: {
                     clickable: true,
                     hoverable: true
-                }
+                },
+                legend: { show: false }
             });
         }
     }
