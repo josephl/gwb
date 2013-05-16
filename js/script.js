@@ -1,8 +1,8 @@
 (function($) {
     var dataOptions = {
-        //target: 'statsd.yastatsd.*.count'
+        target: 'statsd.yastatsd.*.count'
         //target: ['bitcoin.avg', 'bitcoin.high', 'bitcoin.low'],
-        target: 'statsd.lomo.xapian.*.timer.*.count'
+        //target: 'statsd.lomo.xapian.*.timer.*.count'
         //target: ['statsd.lomo.i3.signup.attempts', 'statsd.lomo.i3.signup.password.mismatch']
     };
 
@@ -22,6 +22,9 @@
             requestMain();
         }
     });
+
+    /* States */
+    var selected = false;   // selected state, determine if auto-updates occur
 
     /*
      * Flot Graph Options
@@ -67,7 +70,6 @@
     rangeGraphWidget.bind('plotselected', onPlotSelect);
     rangeGraphWidget.bind('plotunselected', onPlotUnselect);
     mainGraphWidget.bind('plotselected', onPlotSelect);
-    //mainGraphWidget.bind('plotunselected', onPlotUnselect);
 
     var mainPlot, rangePlot;    // plot objects
     // temp debug
@@ -115,8 +117,9 @@
     }
     function update() {
         console.log('update');
-        requestData();
-        //setTimeout(update, 10000);
+        if (!selected)
+            requestData();
+        setTimeout(update, 10000);
     }
     update();
 
@@ -132,7 +135,6 @@
             for (var i = 0; i < dataset.results.length; i++) {
                 pieData.push({
                     data: dataset.stats[i].sum,
-                    //label: dataset.results[i].label
                     label: ''
                 });
             }
@@ -150,10 +152,13 @@
                 legend: { show: false }
             });
         }
+        var statsPanel = $('.panel.stats');
+        statsPanel.text(dataset.stats[0].mean);
     }
 
     /* Selection Handlers */
     function onPlotSelect(event, ranges) {
+        selected = true;
         console.log('onPlotSelect');
         console.log(ranges);
         dataOptions.from = parseInt(ranges.xaxis.from / 1000);
@@ -163,6 +168,7 @@
     function onPlotUnselect(event) {
         // refresh main and range graphs
         console.log('onPlotUnselect');
+        selected = false;
         delete dataOptions.from;
         delete dataOptions.until;
         requestMain();
