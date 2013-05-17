@@ -6,8 +6,7 @@
     position: relative;
     width: 1200px;
     height: 900px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 30px;
 }
 
 .graph.pie {
