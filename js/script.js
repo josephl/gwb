@@ -1,6 +1,6 @@
 (function($) {
     var dataOptions = {
-        target: 'statsd.yastatsd.*.count'
+        target: ['statsd.yastatsd.*.count'],
         //target: ['bitcoin.avg', 'bitcoin.high', 'bitcoin.low'],
         //target: 'statsd.lomo.xapian.*.timer.*.count'
         //target: ['statsd.lomo.i3.signup.attempts', 'statsd.lomo.i3.signup.password.mismatch']
@@ -25,6 +25,7 @@
     });
     var dataset;    // main request data
     var seriesIndex;
+    var separateAxis;   // seriesIndex of metric on separate axis
 
     metricInput.val(dataOptions.target);
     update();
@@ -49,7 +50,13 @@
             hoverable: true,
             autoHighlight: true,
         },
-        xaxis: { mode: 'time', timezone: 'browser' },
+        xaxes: [ { mode: 'time', timezone: 'browser' } ],
+        yaxes: [ { position: 'left' },
+            {
+                alignTicksWithAxis: false,
+                position: 'right'
+            }
+        ],
         //legend: { position: 'ne' },
         legend: { show: false },
         selection: { mode: 'x' }
@@ -92,9 +99,13 @@
             success: function(data) {
                 console.log('data received');
                 dataset = data;
+                if (typeof separateAxis !== 'undefined') {
+                    dataset.results[separateAxis].yaxis = 2;
+                }
                 window.mainPlot = $.plot(mainGraphWidget,
                                          dataset.results,
                                          flotOptions);
+                //console.log(dataset);
                 renderStats();
             },
             error: function(err) {
@@ -232,6 +243,18 @@
     function breakout(e) {
         console.log(e);
         console.log('breakout');
+        if (typeof separateAxis === 'undefined' ||
+                dataset.results[seriesIndex].yaxis === 1) {
+            dataset.results[seriesIndex].yaxis = 2;
+            separateAxis = seriesIndex;
+        }
+        else {
+            separateAxis = undefined;
+            dataset.results[seriesIndex].yaxis = 1;
+        }
+        window.mainPlot = $.plot(mainGraphWidget,
+                                 dataset.results,
+                                 flotOptions);
     }
 
     /* Stats Panel Generator */
