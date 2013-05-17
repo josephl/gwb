@@ -24,13 +24,17 @@
     <div class="widget container">
         <div class="title row span12">
             <input class="metric span6" type="text" value="Metric name"/>
-            <form>
-                <span class="freq span3" style="display:inline-block;">
-                    <input type="radio" name="freq" value="1Day"/><label for="Day">Day</label>
-                    <input type="radio" name="freq" value="1Hour"/><label for="Hour">Hour</label>
-                    <input type="radio" name="freq" value="1Minute"/><label for="Minute">Minute</label>
-                </span>
-            </form>
+            <form><div class="freq span3" style="display:inline-block;">
+                <input id="day" class="timefreq" type="radio" name="freq" value="D">
+                    <label for="day">Day</label>
+                </input>
+                <input id="hour" class="timefreq" type="radio" name="freq" value="H">
+                    <label for="hour">Hour</label>
+                </input>
+                <input id="minute" class="timefreq" type="radio" name="freq" value="T">
+                    <label for="minute">Minute</label>
+                </input>
+                </div></form>
         </div>
         <div class="row">
             <!-- left column -->

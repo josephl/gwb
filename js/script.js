@@ -17,23 +17,27 @@
     var separateAxis;   // seriesIndex of metric on separate axis
 
     /* UI setup */
-    var dayRange = $('.dayRange').slider({
-        range: true,
-        min: 0,
-        max: 24,
-        values: [0, 24],
-        change: function (event, ui) {
-            console.log(ui.values);
-            dataOptions.dayStart = ui.values[0];
-            dataOptions.dayEnd = ui.values[1];
-            requestMain();
-        }
-    });
-    var freq = $('.freq').buttonset()
+
+    //var dayRange = $('.dayRange').slider({
+    //    range: true,
+    //    min: 0,
+    //    max: 24,
+    //    values: [0, 24],
+    //    change: function (event, ui) {
+    //        console.log(ui.values);
+    //        dataOptions.dayStart = ui.values[0];
+    //        dataOptions.dayEnd = ui.values[1];
+    //        requestMain();
+    //    }
+    //});
+    // Frequency Radio
+    var sampleFreq = $('.freq').buttonset()
         .click(function(e) {
-                window.testing = $(this);
-                console.log($(this).val());
-            });
+            var frequency = $('input:radio[name=freq]:checked').val();
+            console.log(frequency);
+            dataOptions.resampleFreq = frequency;
+            requestMain();
+        });
 
     metricInput.val(dataOptions.target);
     update();
