@@ -47,6 +47,10 @@
     margin-left: -0.3em;
 }
 
+.stats.panel ul {
+    -webkit-padding-start: 0px;
+}
+
 .stats li {
     list-style-position: inside;
     list-style-type: none;
