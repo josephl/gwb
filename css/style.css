@@ -46,3 +46,26 @@
 .ui-slider-horizontal .ui-slider-handle {
     margin-left: -0.3em;
 }
+
+.stats li {
+    list-style-position: inside;
+    list-style-type: none;
+}
+
+.color-box {
+    width: 8px;
+    height: 12px;
+    border: 0.5px;
+    padding: 0px;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+input.metric {
+    margin-bottom: 10px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: #ccc;
+    width: 400px;
+}

@@ -9,6 +9,7 @@
     var mainGraphWidget = $('.main.graph.widget');
     var rangeGraphWidget = $('.range.graph.widget');
     var widgetContainer = $('.widget.container');
+    var metricInput =  $('input.metric');
     var pieGraph = $('.graph.pie');
     var dayRange = $('.dayRange').slider({
         range: true,
@@ -22,6 +23,11 @@
             requestMain();
         }
     });
+    var dataset;    // main request data
+    var seriesIndex;
+
+    metricInput.val(dataOptions.target);
+    update();
 
     /* States */
     var selected = false;   // selected state, determine if auto-updates occur
@@ -84,10 +90,15 @@
             jsonp: 'jsonp',
             success: function(data) {
                 console.log('data received');
+                dataset = data;
                 window.mainPlot = $.plot(mainGraphWidget,
-                                         data.results,
+                                         dataset.results,
                                          flotOptions);
-                renderStats(data);
+                renderStats();
+            },
+            error: function(err) {
+                console.log('AJAX error');
+                selected = true;    // stop auto-requests
             }
         });
         console.log('requestMain');
@@ -115,16 +126,17 @@
         requestMain();
         requestRange();
     }
+    // Timer function
     function update() {
         console.log('update');
-        if (!selected)
+        if (!selected && typeof seriesIndex === 'undefined')
             requestData();
         setTimeout(update, 10000);
     }
-    update();
+    //update();
 
     /* Stats panel */
-    function renderStats(dataset) {
+    function renderStats() {
         console.log(dataset);
         // pie chart
         if (dataset.results.length > 1) {
@@ -151,9 +163,25 @@
                 },
                 legend: { show: false }
             });
+
+            /*  pie chart interactivity */
+            pieGraph.unbind('plotclick');
+            pieGraph.bind('plotclick', function(e, pos, obj) {
+                if (typeof seriesIndex === 'undefined' ||
+                        seriesIndex != obj.seriesIndex) {
+                    seriesIndex = obj.seriesIndex;
+                }
+                else {
+                    seriesIndex = undefined;
+                }
+                console.log(seriesIndex);
+                updateStatsPanel(seriesIndex);
+            });
         }
-        var statsPanel = $('.panel.stats');
-        statsPanel.text(dataset.stats[0].mean);
+        else {  // single dataset
+            pieGraph.css('display', 'none');
+        }
+        updateStatsPanel();
     }
 
     /* Selection Handlers */
@@ -173,6 +201,100 @@
         delete dataOptions.until;
         requestMain();
         requestRange();
+    }
+
+    /* Events */
+
+    // Input metric name
+    metricInput.keypress(function(e) {
+            if (e.which == 13) {
+                console.log($(this).val());
+                dataOptions.target = $(this).val();
+                update();
+            }
+        })
+        .focusin(function(event) {
+            //$(event.target).val('');
+            $(this).select()
+        })
+        .focusout(function(event) {
+            if(event.target.value == '') {
+                $(this).val(dataOptions.target);
+            }
+        })
+        .change(function(d) {
+            console.log('change places!');
+            console.log(this);
+        });
+
+    // Breakout single metric to separate axis
+    function breakout(e) {
+        console.log(e);
+        console.log('breakout');
+    }
+
+    /* Stats Panel Generator */
+    function updateStatsPanel() {
+        var startIndex, endIndex;
+        // determine if only single index specified
+        if (typeof seriesIndex === 'undefined') {
+            startIndex = 0;
+            endIndex = dataset.results.length;
+        }
+        else {
+            startIndex = seriesIndex;
+            endIndex = seriesIndex + 1;
+        }
+        console.log('updateStatsPanel');
+        var options = window.mainPlot.getOptions();
+        var statsPanel = $('.stats.panel');
+        statsHTML = dateRange(dataset);
+        for (var i = startIndex; i < endIndex; i++) {
+            var curStats = dataset.stats[i],
+                label = dataset.results[i].label,
+                color = options.colors[i],
+                mean = parseFloat(curStats.mean).toFixed(2),
+                median = parseFloat(curStats.quartile[1]).toFixed(2),
+                variance = parseFloat(curStats.var).toFixed(2),
+                freq = curStats.freq,
+                colorbox = '<div class="color-box" style="background-color:'
+                + color + ';"></div>';
+            statsHTML += '<ul>' + colorbox + label + 
+                '<li>Frequency: ' + freq + '</li>' +
+                '<li>Mean: ' + mean + '</li>' +
+                '<li>Median: ' + median + '</li>' +
+                '<li>Variance: ' + variance + '</li>' +
+                '</ul>';
+        }
+        // Additional options if single stat is focused
+        if (typeof seriesIndex !== 'undefined') {
+            var singleOptions = $('<div />');
+            singleOptions.attr('class', 'single-options');
+            var breakoutButton = $('<button>Breakout</button>')
+                .button()
+                .attr('class', 'breakout');
+            singleOptions.append(breakoutButton);
+            statsHTML += singleOptions.html();
+        }
+        statsPanel.html(statsHTML);
+        $('.breakout').click(breakout);
+    }
+
+    function dateRange() {
+        console.log('dateRange');
+        var results = dataset.results;
+        start = new Date(_.min(_.map(results, function (d) {
+                        return d.data[0][0];
+                    })));
+        end = new Date(_.max(_.map(results, function (d) {
+                        return _.last(d.data)[0];
+                        })));
+        console.log(start);
+        console.log(end);
+        return '<p>' + start.toDateString() + ' - ' +
+            start.toLocaleTimeString() + ' to<br>' +
+            end.toDateString() + ' - ' +
+            end.toLocaleTimeString() + '</p>';
     }
 
 })(jQuery);
