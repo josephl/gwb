@@ -11,6 +11,12 @@
     var widgetContainer = $('.widget.container');
     var metricInput =  $('input.metric');
     var pieGraph = $('.graph.pie');
+
+    var dataset;    // main request data
+    var seriesIndex;
+    var separateAxis;   // seriesIndex of metric on separate axis
+
+    /* UI setup */
     var dayRange = $('.dayRange').slider({
         range: true,
         min: 0,
@@ -23,9 +29,11 @@
             requestMain();
         }
     });
-    var dataset;    // main request data
-    var seriesIndex;
-    var separateAxis;   // seriesIndex of metric on separate axis
+    var freq = $('.freq').buttonset()
+        .click(function(e) {
+                window.testing = $(this);
+                console.log($(this).val());
+            });
 
     metricInput.val(dataOptions.target);
     update();

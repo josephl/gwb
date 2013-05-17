@@ -22,8 +22,15 @@
     <!--div><h1>Graphs Without Borders</h1></div-->
 
     <div class="widget container">
-        <div class="title row span9">
-            <input class="metric" type="text" value="Metric name"/>
+        <div class="title row span12">
+            <input class="metric span6" type="text" value="Metric name"/>
+            <form>
+                <span class="freq span3" style="display:inline-block;">
+                    <input type="radio" name="freq" value="1Day"/><label for="Day">Day</label>
+                    <input type="radio" name="freq" value="1Hour"/><label for="Hour">Hour</label>
+                    <input type="radio" name="freq" value="1Minute"/><label for="Minute">Minute</label>
+                </span>
+            </form>
         </div>
         <div class="row">
             <!-- left column -->
