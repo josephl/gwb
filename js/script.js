@@ -50,7 +50,8 @@
             autoHighlight: true,
         },
         xaxis: { mode: 'time', timezone: 'browser' },
-        legend: { position: 'ne' },
+        //legend: { position: 'ne' },
+        legend: { show: false },
         selection: { mode: 'x' }
     };
     var flotRangeOptions = {
@@ -248,7 +249,7 @@
         console.log('updateStatsPanel');
         var options = window.mainPlot.getOptions();
         var statsPanel = $('.stats.panel');
-        statsHTML = dateRange(dataset);
+        panelHTML = dateRange(dataset);
         for (var i = startIndex; i < endIndex; i++) {
             var curStats = dataset.stats[i],
                 label = dataset.results[i].label,
@@ -259,12 +260,16 @@
                 freq = curStats.freq,
                 colorbox = '<div class="color-box" style="background-color:'
                 + color + ';"></div>';
-            statsHTML += '<ul>' + colorbox + label + 
-                '<li>Frequency: ' + freq + '</li>' +
-                '<li>Mean: ' + mean + '</li>' +
-                '<li>Median: ' + median + '</li>' +
-                '<li>Variance: ' + variance + '</li>' +
-                '</ul>';
+            statsList = $('<ul>' + colorbox + label + 
+                '<br></ul>');
+
+            if (typeof seriesIndex !== 'undefined') {
+                statsList.append('<li>Frequency: ' + freq + '</li>');
+                statsList.append('<li>Mean: ' + mean + '</li>');
+                statsList.append('<li>Median: ' + median + '</li>');
+                statsList.append('<li>Variance: ' + variance + '</li>');
+            }
+            panelHTML += statsList.html();
         }
         // Additional options if single stat is focused
         if (typeof seriesIndex !== 'undefined') {
@@ -274,9 +279,9 @@
                 .button()
                 .attr('class', 'breakout');
             singleOptions.append(breakoutButton);
-            statsHTML += singleOptions.html();
+            panelHTML += singleOptions.html();
         }
-        statsPanel.html(statsHTML);
+        statsPanel.html(panelHTML);
         $('.breakout').click(breakout);
     }
 
