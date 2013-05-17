@@ -221,7 +221,12 @@
     metricInput.keypress(function(e) {
             if (e.which == 13) {
                 console.log($(this).val());
-                dataOptions.target = $(this).val();
+                // parse target metric names
+                var rawTargets = $(this).val();
+                dataOptions.target = _.map(rawTargets.split(','), function(t) {
+                    return t.trim();
+                });
+                console.log(dataOptions.target);
                 update();
             }
         })
