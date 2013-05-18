@@ -32,11 +32,9 @@ requirejs.config({
 //        'libs/jquery.flot.stack': {
 //            deps: ['libs/jquery.flot']
 //        },
-//        'models/model': {
-//            deps: ['libs/jquery', 'libs/backbone',
-//            'libs/jquery.flot', 'libs/jquery.flot.time',
-//            'libs/jquery.flot.stack']
-//        },
+        'models/model': {
+            deps: ['libs/jquery', 'libs/backbone']
+        },
 //        'views/ctrl': {
 //            deps: ['libs/jquery', 'libs/backbone',
 //            'libs/jquery.flot', 'libs/jquery.flot.time',
@@ -45,7 +43,7 @@ requirejs.config({
         'script': {
             deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
                    'libs/jquery.flot.time', 'libs/jquery.flot.selection',
-                   'libs/jquery.flot.pie']
+                   'libs/jquery.flot.pie', 'models/model']
         }
     }
 });
@@ -53,8 +51,9 @@ requirejs.config({
 define(
     ['libs/underscore', 'libs/backbone', 'libs/jquery-ui', 'libs/jquery.flot',
      'libs/jquery.flot.time', 'libs/jquery.flot.selection', 'libs/jquery.flot.pie',
-     'script'],
+     'models/model', 'script'],
     function(underscoreLocal, backboneLocal, uiLocal, flotLocal,
-        flotTimeLocal, flotSelectionLocal, flotPieLocal, scriptLocal) {
+        flotTimeLocal, flotSelectionLocal, flotPieLocal, modelsLocal,
+        scriptLocal) {
     }
 );
