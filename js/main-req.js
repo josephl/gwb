@@ -29,21 +29,31 @@ requirejs.config({
         'libs/jquery.flot.pie': {
             deps: ['libs/jquery.flot']
         },
-//        'libs/jquery.flot.stack': {
-//            deps: ['libs/jquery.flot']
-//        },
         'models/model': {
             deps: ['libs/jquery', 'libs/backbone']
+        },
+        'models/options': {
+            deps: ['libs/jquery', 'libs/backbone']
+        },
+        'views/view': {
+            deps: ['libs/jquery', 'libs/backbone', 'models/model',
+                   'models/options']
         },
 //        'views/ctrl': {
 //            deps: ['libs/jquery', 'libs/backbone',
 //            'libs/jquery.flot', 'libs/jquery.flot.time',
 //            'libs/jquery.flot.stack']
 //        },
-        'script': {
+        //'script': {
+        //    deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
+        //           'libs/jquery.flot.time', 'libs/jquery.flot.selection',
+        //           'libs/jquery.flot.pie', 'models/model', 'views/view']
+        //}
+        'test': {
             deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
                    'libs/jquery.flot.time', 'libs/jquery.flot.selection',
-                   'libs/jquery.flot.pie', 'models/model']
+                   'libs/jquery.flot.pie', 'libs/backbone',
+                   'models/model', 'views/view']
         }
     }
 });
@@ -51,9 +61,10 @@ requirejs.config({
 define(
     ['libs/underscore', 'libs/backbone', 'libs/jquery-ui', 'libs/jquery.flot',
      'libs/jquery.flot.time', 'libs/jquery.flot.selection', 'libs/jquery.flot.pie',
-     'models/model', 'script'],
+     //'models/model', 'views/view', 'script'],
+     'models/model', 'models/options', 'views/view', 'test'],
     function(underscoreLocal, backboneLocal, uiLocal, flotLocal,
-        flotTimeLocal, flotSelectionLocal, flotPieLocal, modelsLocal,
-        scriptLocal) {
+        flotTimeLocal, flotSelectionLocal, flotPieLocal,
+        modelsLocal, optionsLocal, viewsLocal, testLocal) {
     }
 );
