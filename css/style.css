@@ -2,11 +2,17 @@
     font-family: Helvetica, arial, sans-serif;
 }
 
+.widget .column {
+    margin-left: 0px;
+}
+
+.widget .row {
+    margin-left: 0px;
+}
+
 .widget.container {
-    position: relative;
-    width: 1200px;
-    height: 900px;
-    margin: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .graph.pie {
@@ -14,11 +20,11 @@
     height: 300px;
 }
 
-.main.graph.widget {
+.main.graph {
     height: 600px;
 }
 
-.range.graph.widget {
+.range.graph {
     height: 150px;
 }
 
@@ -26,11 +32,6 @@
     float: right;
     width: 400px;
     height: 600px;
-}
-
-.controls {
-    margin-top: 40px;
-    margin-left: 30px;
 }
 
 .ui-slider {
@@ -69,14 +70,14 @@
 input.target {
     display: inline-block;
     outline: none;
-    margin-left: 0px;
+    margin-left: 30px;
     margin-bottom: 10px;
     border-top-width: 0px;
     border-left-width: 0px;
     border-right-width: 0px;
     border-color: #ccc;
     font-size: 1.2em;
-    /*width: 600px;*/
+    min-width: 200px;
 }
 
 .freq {

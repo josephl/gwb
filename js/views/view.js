@@ -9,13 +9,20 @@ Views = window.Views || {};
         flotOptions: new Options.FlotMain(),
         initialize: function() {
             //this.flotOptions = new Options.FlotMain();
-            this.listenTo(this.model, 'updateMain', this.render);
+            //this.listenTo(this.model, 'updateMain', this.render);
+            this.model.on('change:mainData', this.render, this);
         },
         render: function() {
             var data = this.model.get('mainData');
-            this.plot = $.plot(this.$el, data, this.flotOptions.toJSON());
-            // set colors back to models
-            this.model.set('colors', this.plot.getOptions().colors);
+            if (data !== null) {
+                this.$el.show();
+                this.plot = $.plot(this.$el, data, this.flotOptions.toJSON());
+                // set colors back to models
+                this.model.set('colors', this.plot.getOptions().colors);
+            }
+            else {
+                this.$el.hide();
+            }
             return this;
         },
         events: {
@@ -38,11 +45,18 @@ Views = window.Views || {};
         className: 'range graph widget span9',
         flotOptions: new Options.FlotRange(),
         initialize: function() {
-            this.listenTo(this.model, 'updateRange', this.render);
+            //this.listenTo(this.model, 'updateRange', this.render);
+           this.model.on('change:rangeData', this.render, this);
         },
         render: function() {
             var data = this.model.get('rangeData');
-            this.plot = $.plot(this.$el, data, this.flotOptions.toJSON());
+            if (data !== null) {
+                this.$el.show();
+                this.plot = $.plot(this.$el, data, this.flotOptions.toJSON());
+            }
+            else {
+                this.$el.hide();
+            }
             return this;
         },
         events: {
@@ -73,23 +87,29 @@ Views = window.Views || {};
         className: 'pie graph span3',
         flotOptions: new Options.FlotPie(),
         initialize: function() {
-            this.listenTo(this.model, 'updateStats', this.render);
+            //this.listenTo(this.model, 'updateStats', this.render);
+           this.model.on('change:mainStats', this.render, this);
         },
         render: function() {
             console.log('pie');
             var stats = this.model.get('mainStats');
-            var data = _.map(stats, function(s) {
-                return {
-                    data: s.sum,
-                    label: ''
-                };
-            });
-            if (data.length > 1) {
-                this.$el.css('display', 'inline');
-                this.plot = $.plot(this.$el, data, this.flotOptions.toJSON()); 
+            if (stats !== null) {
+                var data = _.map(stats, function(s) {
+                    return {
+                        data: s.sum,
+                        label: ''
+                    };
+                });
+                if (data.length > 1) {
+                    this.$el.show();
+                    this.plot = $.plot(this.$el, data, this.flotOptions.toJSON()); 
+                }
+                else {
+                    this.$el.hide();
+                }
             }
             else {
-                this.$el.css('display', 'none');
+                this.$el.hide();
             }
             return this;
         },
@@ -175,12 +195,14 @@ Views = window.Views || {};
         tagName: 'input',
         className: 'target',
         initialize: function() {
+            console.log(this.el);
             var that = this;
             this.$el.keypress(function(e) {
                 if (e.which == 13) {
                     // parse target metric names
                     var rawTargets = that.$el.val();
-                    that.model.get('options').target = _.map(
+                    console.log(rawTargets);
+                    that.model.get('options').get('data').target = _.map(
                         rawTargets.split(','),
                         function(t) { return t.trim(); });
                     that.model.fetch();
@@ -227,12 +249,13 @@ Views = window.Views || {};
                     }
                 }
                 this.$el.buttonset('refresh');
-                this.model.get('options').resampleFreq = $(e.target).val();
+                this.model.get('options').get('data').resampleFreq =
+                    $(e.target).val();
                 this.model.fetch(false);
             }
             else {
                 console.log('unchecked');
-                delete this.model.get('options').resampleFreq;
+                delete this.model.get('options').get('data').resampleFreq;
                 this.model.fetch(false);
             }
         }
@@ -244,36 +267,54 @@ Views = window.Views || {};
     Views.Widget = Backbone.View.extend({
         tagName: 'div',
         className: 'widget container',
-        //template: _.template($('#widget-template').html()),
+        template: _.template($('#widget-template').html()),
         initialize: function() {
             console.log('Widget');
             $('body').append(this.$el);
-            var model = { model: this.model };
-            this.target = new Views.InputTarget(model);
-            this.frequency = new Views.FreqToggle(model);
-            this.mainPlot = new Views.MainPlot(model);
-            this.rangePlot = new Views.RangePlot(model);
-            this.pieGraph = new Views.PieGraph(model);
-            this.statsPanel = new Views.StatsPanel(model);
+            this.$el.html(this.template());
+            this.target = new Views.InputTarget({
+                el: $('input.target', this.$el),
+                model: this.model
+            });
+            this.frequency = new Views.FreqToggle({
+                el: $('.freq', this.$el),
+                model: this.model
+            });
+            this.mainPlot = new Views.MainPlot({
+                el: $('.main.graph', this.$el),
+                model: this.model
+            });
+            this.rangePlot = new Views.RangePlot({
+                el: $('.range.graph', this.$el),
+                model: this.model
+            });
+            this.pieGraph = new Views.PieGraph({
+                el: $('.pie.graph', this.$el),
+                model: this.model
+            });
+            this.statsPanel = new Views.StatsPanel({
+                el: $('.stats.panel', this.$el),
+                model: this.model
+            });
+            //this.frequency.render();
             this.model.fetch();
         },
         render: function() {
-            this.$el.append(this.target.$el);
-            this.$el.append(this.frequency.$el);
-            this.$el.append(this.mainPlot.$el);
-            this.$el.append(this.rangePlot.$el);
-            this.$el.append(this.pieGraph.$el);
-            this.$el.append(this.statsPanel.$el);
-            //this.subviews = {
-            //    target: this.target.$el.html(),
-            //    frequency: this.frequency.$el.html(),
-            //    mainPlot: this.mainPlot.$el.html(),
-            //    rangePlot: this.rangePlot.$el.html(),
-            //    pieGraph: this.pieGraph.$el.html(),
-            //    statsPanel: this.statsPanel.$el.html()
-            //};
-            //this.$el.html(this.template(this.subviews));
+            this.target.$el.show();
+            this.frequency.$el.show();
+            this.mainPlot.$el.show();
+            this.rangePlot.$el.show();
+            this.pieGraph.$el.show();
+            this.statsPanel.$el.show();
             return this;
+        },
+        hideall: function() {
+            this.target.$el.hide();
+            this.frequency.$el.hide();
+            this.mainPlot.$el.hide();
+            this.rangePlot.$el.hide();
+            this.pieGraph.$el.hide();
+            this.statsPanel.$el.hide();
         }
     });
 })(jQuery);

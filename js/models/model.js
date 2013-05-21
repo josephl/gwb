@@ -18,11 +18,14 @@ Models = window.Models || {};
             var that = this;
             var mainOptions = this.get('options').toJSON();
             mainOptions.success = function(data) {
+                that.set('mainStats', data.stats);  // stats must be set first
                 that.set('mainData', data.results);
-                that.set('mainStats', data.stats);
-                that.trigger('updateMain', that.get('mainData'));
-                that.trigger('updateStats', that.get('mainStats'));
                 console.log('fetch');
+            };
+            mainOptions.error = function(jqXHR, status, err) {
+                console.log(status);
+                that.set('mainData', null);
+                that.set('mainStats', null);
             };
             Backbone.sync('read', this, mainOptions);
 
@@ -34,6 +37,10 @@ Models = window.Models || {};
                     that.set('rangeData', data.results);
                     that.trigger('updateRange', that.get('rangeData'));
                     console.log('fetch');
+                };
+                rangeOptions.error = function(jqXHR, status, err) {
+                    console.log(status);
+                    that.set('rangeData', null);
                 };
                 Backbone.sync('read', this, rangeOptions);
             }

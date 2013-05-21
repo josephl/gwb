@@ -25,16 +25,18 @@
     <!-- Templates -->
     <script type="text/template" id="widget-template">
         <div class="row span12" id="top">
-            <%- target %>
-            <div class="span9 freq"><%= frequency %></div>
+            <input type="text" class="span6 target"></input>
+            <div class="span3 freq"></div>
         </div>
         <div class="row span12" id="main">
-            <!-- Graphs -->
             <div class="column span9" id="graph">
-                <div class="main graph span9"><%= mainPlot %></div>
-                <%- rangePlot %>
+                <div class="main graph span9"></div>
+                <div class="range graph span9"></div>
             </div>
-            <div class="column span3" id="panel"></div>
+            <div class="column span3" id="panel" style="padding-left:20px">
+                <div class="pie graph span3"></div>
+                <div class="stats panel span3"></div>
+            </div>
         </div>
     </script>
 
