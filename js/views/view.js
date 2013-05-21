@@ -155,7 +155,7 @@ Views = window.Views || {};
                 if (this.model.get('selected') === i) {
                     var freq = stats[i].freq,
                         mean = parseFloat(stats[i].mean).toFixed(2),
-                        median = parseFloat(stats[i].quartile[1]).toFixed(2),
+                        median = parseFloat(stats[i].quartile[2]).toFixed(2),
                         variance = parseFloat(stats[i].var).toFixed(2);
                     curStat.append('<li>Frequency: ' + freq + '</li>')
                         .append('<li>Mean: ' + mean + '</li>')
