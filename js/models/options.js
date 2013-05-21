@@ -59,7 +59,6 @@ console.log('Options');
 
     /* Flot Pie Graph */
     Options.FlotPie = Backbone.Model.extend({
-
         initialize: function() {
             this.set({
                 series: {
@@ -74,7 +73,16 @@ console.log('Options');
                 legend: { show: false }
             });
         }
-
     });
+
+    Options.Ajax = Backbone.Model.extend({
+        initialize: function() {
+            this.set({
+                url: 'http://devenv.dev.sys:5000/data',
+                jsonp: 'jsonp'
+            });
+        }
+    });
+
 
 })(jQuery);

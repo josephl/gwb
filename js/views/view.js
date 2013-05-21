@@ -23,11 +23,11 @@ Views = window.Views || {};
         },
         // set time range, re-request
         plotselected: function(e, ranges) {
-            var options = this.model.get('options');
+            var options = this.model.get('options').get('data');
             options.from = parseInt(ranges.xaxis.from / 1000);
             options.until = parseInt(ranges.xaxis.to / 1000);
             console.log(this.model.get('options'));
-            this.model.requestMain();
+            this.model.fetch(false);
         }
     });
 
@@ -51,18 +51,18 @@ Views = window.Views || {};
         },
         // set time range, re-request model's main
         plotselected: function(e, ranges) {
-            var options = this.model.get('options');
+            var options = this.model.get('options').get('data');
             options.from = parseInt(ranges.xaxis.from / 1000);
             options.until = parseInt(ranges.xaxis.to / 1000);
             console.log(this.model.get('options'));
-            this.model.requestMain();
+            this.model.fetch(false);
         },
         // de-select range graph, reset main to default time interval
         plotunselected: function() {
-            var options = this.model.get('options');
+            var options = this.model.get('options').get('data');
             delete options.from;
             delete options.until;
-            this.model.requestMain();
+            this.model.fetch(false);
         }
     });
 
@@ -183,7 +183,7 @@ Views = window.Views || {};
                     that.model.get('options').target = _.map(
                         rawTargets.split(','),
                         function(t) { return t.trim(); });
-                    that.model.request();
+                    that.model.fetch();
                 }
             });
         },
@@ -228,12 +228,12 @@ Views = window.Views || {};
                 }
                 this.$el.buttonset('refresh');
                 this.model.get('options').resampleFreq = $(e.target).val();
-                this.model.requestMain();
+                this.model.fetch(false);
             }
             else {
                 console.log('unchecked');
                 delete this.model.get('options').resampleFreq;
-                this.model.requestMain();
+                this.model.fetch(false);
             }
         }
     });
@@ -255,7 +255,7 @@ Views = window.Views || {};
             this.rangePlot = new Views.RangePlot(model);
             this.pieGraph = new Views.PieGraph(model);
             this.statsPanel = new Views.StatsPanel(model);
-            this.model.request();
+            this.model.fetch();
         },
         render: function() {
             this.$el.append(this.target.$el);
