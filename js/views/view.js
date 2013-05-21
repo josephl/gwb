@@ -195,7 +195,7 @@ Views = window.Views || {};
         tagName: 'input',
         className: 'target',
         initialize: function() {
-            console.log(this.el);
+            this.$el.val(this.getTargets());
             var that = this;
             this.$el.keypress(function(e) {
                 if (e.which == 13) {
@@ -218,6 +218,14 @@ Views = window.Views || {};
         },
         blur: function() {
             this.$el.css('border-bottom-color', '');
+        },
+        getTargets: function() {
+            var tarList = this.model.get('options').get('data').target;
+            var tarStr = tarList.join(', ');
+            if (tarStr.length == 0) {
+                return 'Metric Target';
+            }
+            return tarStr;
         }
     });
 

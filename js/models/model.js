@@ -29,7 +29,7 @@ Models = window.Models || {};
             };
             Backbone.sync('read', this, mainOptions);
 
-            if (!range) {
+            if (typeof range === 'undefined' || range === true) {
                 var rangeOptions = $.extend(true, {}, this.get('options').toJSON());
                 rangeOptions.data.from = 0;
                 delete rangeOptions.data.until;
