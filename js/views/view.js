@@ -87,7 +87,6 @@ Views = window.Views || {};
         className: 'pie graph span3',
         flotOptions: new Options.FlotPie(),
         initialize: function() {
-            //this.listenTo(this.model, 'updateStats', this.render);
            this.model.on('change:mainStats', this.render, this);
         },
         render: function() {
@@ -118,14 +117,6 @@ Views = window.Views || {};
         },
         plotclick: function(e, pos, obj) {
             this.trigger('selected', obj.seriesIndex);
-            //if (this.model.get('selected') === obj.seriesIndex) {
-            //    console.log('unselected');
-            //    this.model.unset('selected');
-            //}
-            //else {
-            //    console.log('selected: ' + obj.seriesIndex);
-            //    this.model.set('selected', obj.seriesIndex);
-            //}
         }
     });
 
@@ -138,8 +129,6 @@ Views = window.Views || {};
         initialize: function() {
             // Assigned colors occurs after MainPlot chooses and selects them
             this.model.on('change:colors', this.render, this);
-            // subscribe to changes to selection, re-render
-            //this.model.on('change:selected', this.activate, this);
             this.$el.accordion({
                 collapsible: true,
                 active: false,
