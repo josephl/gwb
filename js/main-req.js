@@ -39,17 +39,7 @@ requirejs.config({
             deps: ['libs/jquery', 'libs/backbone', 'models/model',
                    'models/options']
         },
-//        'views/ctrl': {
-//            deps: ['libs/jquery', 'libs/backbone',
-//            'libs/jquery.flot', 'libs/jquery.flot.time',
-//            'libs/jquery.flot.stack']
-//        },
-        //'script': {
-        //    deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
-        //           'libs/jquery.flot.time', 'libs/jquery.flot.selection',
-        //           'libs/jquery.flot.pie', 'models/model', 'views/view']
-        //}
-        'test': {
+        'script': {
             deps: ['libs/jquery', 'libs/jquery-ui', 'libs/jquery.flot',
                    'libs/jquery.flot.time', 'libs/jquery.flot.selection',
                    'libs/jquery.flot.pie', 'libs/backbone',
@@ -61,10 +51,9 @@ requirejs.config({
 define(
     ['libs/underscore', 'libs/backbone', 'libs/jquery-ui', 'libs/jquery.flot',
      'libs/jquery.flot.time', 'libs/jquery.flot.selection', 'libs/jquery.flot.pie',
-     //'models/model', 'views/view', 'script'],
-     'models/model', 'models/options', 'views/view', 'test'],
+     'models/model', 'models/options', 'views/view', 'script'],
     function(underscoreLocal, backboneLocal, uiLocal, flotLocal,
         flotTimeLocal, flotSelectionLocal, flotPieLocal,
-        modelsLocal, optionsLocal, viewsLocal, testLocal) {
+        modelsLocal, optionsLocal, viewsLocal, scriptLocal) {
     }
 );
