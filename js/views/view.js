@@ -154,33 +154,6 @@ Views = window.Views || {};
                 });
             return this;
         },
-        renderOld: function(data) {
-            console.log('render stats');
-            this.$el.empty();
-            var stats = this.model.get('mainStats');
-            var mainData = this.model.get('mainData');
-            var colors = this.model.get('colors');
-            for (var i = 0; i < stats.length; i++) {
-                var curStat = $('<ul>');
-                var colorbox = $('<div>')
-                    .attr('class', 'color-box')
-                    .css('background-color', colors[i]);
-                curStat.append(colorbox)
-                    .append('<a>' + mainData[i].label + '</a>');
-                if (this.model.get('selected') === i) {
-                    var freq = stats[i].freq,
-                        mean = parseFloat(stats[i].mean).toFixed(2),
-                        median = parseFloat(stats[i].quartile[2]).toFixed(2),
-                        variance = parseFloat(stats[i].var).toFixed(2);
-                    curStat.append('<li>Frequency: ' + freq + '</li>')
-                        .append('<li>Mean: ' + mean + '</li>')
-                        .append('<li>Median: ' + median + '</li>')
-                        .append('<li>Variance: ' + variance + '</li>');
-                }
-                this.$el.append(curStat);
-            }
-            return this;
-        },
         events: {
             'click #isolate': 'isolate',
         },
