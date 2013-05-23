@@ -14,7 +14,6 @@ Views = window.Views || {};
         },
         render: function() {
             var data = this.model.get('mainData');
-            //var stats = this.model.get('mainStats');
             var colors;
             if (data !== null) {
                 this.$el.show();
@@ -24,9 +23,6 @@ Views = window.Views || {};
                 // change:colors invokes StatsPanel object to render
                 colors = this.plot.getOptions().colors;
                 this.model.set('colors', colors);
-                //for (var i = 0; i < stats.length; i++) {
-                //    stats[i].color = colors[i];
-                //}
             }
             else {
                 this.$el.hide();
@@ -154,13 +150,9 @@ Views = window.Views || {};
             for (var i = 0; i < stats.length; i++) {
                 stats[i].label = mainData[i].label;
                 stats[i].index = i;
-                //stats[i].color = colors[i];
                 this.$el.append(this.template(stats[i]));
                 // add selected metric options
             }
-            //_.each($('#isolate', this.$el), function(elem) {
-            //    $(elem).button();
-            //});
             $('.isolate-button', this.$el).button();
             this.$el.accordion({ animate: false });
             this.$el.accordion('refresh')
