@@ -311,17 +311,32 @@ Views = window.Views || {};
             if (this.dayStart == this.hours[0]) {
                 if (this.hours.length <= 1) {
                     console.log('clear');
+                    $('.hour.ui-selected', this.$el).removeClass('ui-selected');
                     delete options.dayStart;
                     delete options.dayEnd;
                 }
                 else {
                     options.dayStart = this.hours[0];
                     options.dayEnd = _.last(this.hours);
+                    $(_.last($('.hour.ui-selected'))).removeClass('ui-selected');
                 }
             }
             else {
+                // backward-selected, exclusive
                 options.dayStart = _.last(this.hours);
                 options.dayEnd = this.hours[0];
+                // set ui-selected
+                this.hours.pop(-1);
+                console.log(this.hours);;
+                console.log(_.range(0, 24));
+                this.hours = _.difference(_.range(0, 24), this.hours);
+                console.log(this.hours);
+                $('.ui-selected', this.$el).removeClass('ui-selected');
+                for (var i = 0; i < this.hours.length; i++) {
+                    var hour = $('.hour#' + this.hours[i], this.$el);
+                    console.log(hour);
+                    $('.hour#' + this.hours[i], this.$el).addClass('ui-selected');
+                }
             }
             this.model.fetch();
         },

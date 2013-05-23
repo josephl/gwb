@@ -101,3 +101,8 @@ div.hour {
     padding-left: 4px;
     font-size: 0.8em;
 }
+
+.ui-selected, .ui-selecting {
+    background: rgb(175, 216, 248);
+    color: white;
+}
