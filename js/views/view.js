@@ -252,9 +252,7 @@ Views = window.Views || {};
             var inputs = $('<input type="checkbox" id="freq1" value="D" />' +
                            '<label for="freq1">Day</label>' +
                            '<input type="checkbox" id="freq2" value="H" />' +
-                           '<label for="freq2">Hour</label>' +
-                           '<input type="checkbox" id="freq3" value="T" />' +
-                           '<label for="freq3">Minute</label>');
+                           '<label for="freq2">Hour</label>');
             this.$el.append(inputs);
             this.$el.buttonset();
         },
