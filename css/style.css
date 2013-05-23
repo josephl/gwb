@@ -88,3 +88,16 @@ input.target {
 .freq {
     display: inline-block;
 }
+
+div.selectable {
+    margin-top: 30px;
+}
+
+div.hour {
+    display: inline-block;
+    width: 26px;
+    height: 20px;
+    margin: 0px;
+    padding-left: 4px;
+    font-size: 0.8em;
+}

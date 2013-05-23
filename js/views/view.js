@@ -282,7 +282,54 @@ Views = window.Views || {};
             }
         }
     });
-    
+
+    /* DayRange Selector
+     * Select specific hours within the day */
+    Views.DayRange = Backbone.View.extend({
+        tagName: 'div',
+        className: 'dayrange selectable span9',
+        initialize: function() {
+            this.$el.selectable({
+                filter: '.hour'
+            });
+            this.hours = [];
+        },
+        events: {
+            'selectablestart': 'start',
+            'selectablestop': 'stop',
+            'selectableselected': 'selected'
+        },
+        start: function(e, ui) {
+            this.hours = [];
+            this.dayStart = e.toElement.id;
+            console.log(this.dayStart);
+        },
+        stop: function(e, ui) {
+            var options = this.model.get('options').get('data');
+            console.log(this.hours);
+            // determine if forward-selected
+            if (this.dayStart == this.hours[0]) {
+                if (this.hours.length <= 1) {
+                    console.log('clear');
+                    delete options.dayStart;
+                    delete options.dayEnd;
+                }
+                else {
+                    options.dayStart = this.hours[0];
+                    options.dayEnd = _.last(this.hours);
+                }
+            }
+            else {
+                options.dayStart = _.last(this.hours);
+                options.dayEnd = this.hours[0];
+            }
+            this.model.fetch();
+        },
+        selected: function(e, ui) {
+            this.hours.push(parseInt(ui.selected.id));
+        }
+    });
+
 
     /* Widget View
      * Top-level container */
@@ -316,6 +363,10 @@ Views = window.Views || {};
             });
             this.statsPanel = new Views.StatsPanel({
                 el: $('.stats.panel', this.$el),
+                model: this.model
+            });
+            this.dayRange = new Views.DayRange({
+                el: $('.selectable.dayrange', this.$el),
                 model: this.model
             });
             /* event handlers */
