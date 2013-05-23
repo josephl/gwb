@@ -132,7 +132,8 @@ Views = window.Views || {};
             this.$el.accordion({
                 collapsible: true,
                 active: false,
-                icons: false
+                icons: false,
+                animate: false
             });
         },
         render: function() {
@@ -147,7 +148,10 @@ Views = window.Views || {};
                 this.$el.append(this.template(stats[i]));
             }
             this.$el.accordion('refresh')
-                .accordion({ active: false });
+                .accordion({
+                    active: false,
+                    animate: true
+                });
             return this;
         },
         renderOld: function(data) {
