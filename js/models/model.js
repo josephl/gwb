@@ -18,8 +18,8 @@ Models = window.Models || {};
             var that = this;
             var mainOptions = this.get('options').toJSON();
             mainOptions.success = function(data) {
-                that.set('mainStats', data.stats);  // stats must be set first
                 that.set('mainData', data.results);
+                that.set('mainStats', data.stats);  // stats must be set first
                 console.log('fetch');
             };
             mainOptions.error = function(jqXHR, status, err) {

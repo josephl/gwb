@@ -41,7 +41,7 @@
     </script>
 
     <script type="text/template" id="stat-template">
-    <h3><div class="color-box" style="background-color:<%- color %>;"></div>
+    <h3><div class="color-box"></div>
         <%- label %></h3>
         <div>
             <ul>
@@ -50,6 +50,9 @@
                 <li>Sum: <%- sum %></li>
                 <li>Variance: <%- variance %></li>
             </ul>
+            <input type="checkbox" id="isolate<%- index %>"
+                class="isolate-button" />
+                <label for="isolate<%- index %>">Separate Y-Axis</label>
         </div>
     </script>
 

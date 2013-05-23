@@ -14,11 +14,19 @@ Views = window.Views || {};
         },
         render: function() {
             var data = this.model.get('mainData');
+            //var stats = this.model.get('mainStats');
+            var colors;
             if (data !== null) {
                 this.$el.show();
                 this.plot = $.plot(this.$el, data, this.flotOptions.toJSON());
-                // set colors back to models
-                this.model.set('colors', this.plot.getOptions().colors);
+                // set colors back to models, unless they already exist,
+                // are unchanged, and labels are the same
+                // change:colors invokes StatsPanel object to render
+                colors = this.plot.getOptions().colors;
+                this.model.set('colors', colors);
+                //for (var i = 0; i < stats.length; i++) {
+                //    stats[i].color = colors[i];
+                //}
             }
             else {
                 this.$el.hide();
@@ -35,7 +43,7 @@ Views = window.Views || {};
             options.until = parseInt(ranges.xaxis.to / 1000);
             console.log(this.model.get('options'));
             this.model.fetch(false);
-        }
+        },
     });
 
 
@@ -128,7 +136,9 @@ Views = window.Views || {};
         template: _.template($('#stat-template').html()),
         initialize: function() {
             // Assigned colors occurs after MainPlot chooses and selects them
-            this.model.on('change:colors', this.render, this);
+            //this.model.on('change:colors', this.render, this);
+            this.model.on('change:mainStats', this.render, this);
+            this.model.on('change:colors', this.colorize, this);
             this.$el.accordion({
                 collapsible: true,
                 active: false,
@@ -143,19 +153,36 @@ Views = window.Views || {};
             var colors = this.model.get('colors');
             for (var i = 0; i < stats.length; i++) {
                 stats[i].label = mainData[i].label;
-                stats[i].color = colors[i];
+                stats[i].index = i;
+                //stats[i].color = colors[i];
                 this.$el.append(this.template(stats[i]));
+                // add selected metric options
             }
+            //_.each($('#isolate', this.$el), function(elem) {
+            //    $(elem).button();
+            //});
+            $('.isolate-button', this.$el).button();
             this.$el.accordion({ animate: false });
             this.$el.accordion('refresh')
                 .accordion({
                     active: false,
                     animate: true
                 });
+            /* if colors are ready */
+            if (typeof colors !== 'undefined') {
+                this.colorize();
+            }
             return this;
         },
         events: {
-            'click #isolate': 'isolate',
+            'click .isolate-button': 'isolate',
+        },
+        colorize: function() {
+            var boxen = $('.color-box', this.$el);
+            var colors = this.model.get('colors');
+            for (var i = 0; i < boxen.length; i++) {
+                $(boxen[i]).css('background-color', colors[i]);
+            }
         },
         // activate: the other selected. triggered from outside views
         activate: function(index) {
@@ -165,7 +192,16 @@ Views = window.Views || {};
             });
         },
         isolate: function(e) {
-            console.log(e);
+            var mainData = this.model.get('mainData');
+            var index = this.$el.accordion('option', 'active');
+            if (e.target.checked === true) {
+                console.log(index);
+                mainData[index].yaxis = 2;
+            }
+            else {
+                delete mainData[index].yaxis;
+            }
+            this.trigger('isolate', index);
         }
     });
 
@@ -284,6 +320,7 @@ Views = window.Views || {};
             });
             /* event handlers */
             this.listenTo(this.pieGraph, 'selected', this.selected);
+            this.listenTo(this.statsPanel, 'isolate', this.isolate);
             //this.frequency.render();
             this.model.fetch();
         },
@@ -306,6 +343,9 @@ Views = window.Views || {};
         },
         selected: function(index) {
             this.statsPanel.activate(index);
+        },
+        isolate: function(index) {
+            this.mainPlot.render();
         }
     });
 })(jQuery);
