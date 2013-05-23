@@ -117,14 +117,15 @@ Views = window.Views || {};
             'plotclick': 'plotclick'
         },
         plotclick: function(e, pos, obj) {
-            if (this.model.get('selected') === obj.seriesIndex) {
-                console.log('unselected');
-                this.model.unset('selected');
-            }
-            else {
-                console.log('selected: ' + obj.seriesIndex);
-                this.model.set('selected', obj.seriesIndex);
-            }
+            this.trigger('selected', obj.seriesIndex);
+            //if (this.model.get('selected') === obj.seriesIndex) {
+            //    console.log('unselected');
+            //    this.model.unset('selected');
+            //}
+            //else {
+            //    console.log('selected: ' + obj.seriesIndex);
+            //    this.model.set('selected', obj.seriesIndex);
+            //}
         }
     });
 
@@ -132,14 +133,35 @@ Views = window.Views || {};
     /* Stats Panel */
     Views.StatsPanel = Backbone.View.extend({
         tagName: 'div',
-        className: 'stats panel span3',
+        className: 'stats panel',
+        template: _.template($('#stat-template').html()),
         initialize: function() {
             // Assigned colors occurs after MainPlot chooses and selects them
             this.model.on('change:colors', this.render, this);
             // subscribe to changes to selection, re-render
-            this.model.on('change:selected', this.render, this);
+            //this.model.on('change:selected', this.activate, this);
+            this.$el.accordion({
+                collapsible: true,
+                active: false,
+                icons: false
+            });
         },
-        render: function(data) {
+        render: function() {
+            console.log('render stats');
+            this.$el.empty();
+            var stats = $.extend(true, [], this.model.get('mainStats'));
+            var mainData = this.model.get('mainData');
+            var colors = this.model.get('colors');
+            for (var i = 0; i < stats.length; i++) {
+                stats[i].label = mainData[i].label;
+                stats[i].color = colors[i];
+                this.$el.append(this.template(stats[i]));
+            }
+            this.$el.accordion('refresh')
+                .accordion({ active: false });
+            return this;
+        },
+        renderOld: function(data) {
             console.log('render stats');
             this.$el.empty();
             var stats = this.model.get('mainStats');
@@ -167,25 +189,17 @@ Views = window.Views || {};
             return this;
         },
         events: {
-            'click a': 'selected'
+            'click #isolate': 'isolate',
         },
-        // metric label selected from stats panel
-        selected: function(e) {
-            var target = e.target.text;
-            var mainData = this.model.get('mainData');
-            for (var i = 0; i < mainData.length; i++) {
-                if (target === mainData[i].label) {
-                    if (this.model.get('selected') === i) {
-                        console.log('unselected: ' + target);
-                        this.model.unset('selected');
-                    }
-                    else {
-                        console.log('selected: ' + target);
-                        this.model.set('selected', i);
-                    }
-                    break;
-                }
-            }
+        // activate: the other selected. triggered from outside views
+        activate: function(index) {
+            var current = this.$el.accordion('option', 'active');
+            this.$el.accordion({
+                active: current === index ? false : index
+            });
+        },
+        isolate: function(e) {
+            console.log(e);
         }
     });
 
@@ -304,6 +318,8 @@ Views = window.Views || {};
                 el: $('.stats.panel', this.$el),
                 model: this.model
             });
+            /* event handlers */
+            this.listenTo(this.pieGraph, 'selected', this.selected);
             //this.frequency.render();
             this.model.fetch();
         },
@@ -323,6 +339,9 @@ Views = window.Views || {};
             this.rangePlot.$el.hide();
             this.pieGraph.$el.hide();
             this.statsPanel.$el.hide();
+        },
+        selected: function(index) {
+            this.statsPanel.activate(index);
         }
     });
 })(jQuery);

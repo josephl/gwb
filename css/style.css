@@ -67,6 +67,11 @@
     margin-right: 4px;
 }
 
+.stats.panel h3, .ui-accordion-content {
+    background-color: white;
+    border: 0px;
+}
+
 input.target {
     display: inline-block;
     outline: none;
