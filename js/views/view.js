@@ -153,7 +153,8 @@ Views = window.Views || {};
                 this.$el.append(this.template(stats[i]));
                 // add selected metric options
             }
-            $('.isolate-button', this.$el).button();
+            //$('.isolate-button', this.$el).button();
+            $('.stat-button', this.$el).button();
             this.$el.accordion({ animate: false });
             this.$el.accordion('refresh')
                 .accordion({
@@ -168,6 +169,7 @@ Views = window.Views || {};
         },
         events: {
             'click .isolate-button': 'isolate',
+            'click .analyze-button': 'analyze'
         },
         colorize: function() {
             var boxen = $('.color-box', this.$el);
@@ -194,6 +196,11 @@ Views = window.Views || {};
                 delete mainData[index].yaxis;
             }
             this.trigger('isolate', index);
+        },
+        analyze: function(e) {
+            //var mainData = this.model.get('mainData');
+            var index = this.$el.accordion('option', 'active');
+            this.trigger('analyze', index);
         }
     });
 
@@ -379,6 +386,7 @@ Views = window.Views || {};
             /* event handlers */
             this.listenTo(this.pieGraph, 'selected', this.selected);
             this.listenTo(this.statsPanel, 'isolate', this.isolate);
+            this.listenTo(this.statsPanel, 'analyze', this.analyze);
             //this.frequency.render();
             this.model.fetch();
         },
@@ -404,6 +412,33 @@ Views = window.Views || {};
         },
         isolate: function(index) {
             this.mainPlot.render();
+        },
+        analyze: function(index) {
+            var target = this.model.get('mainData')[index].label;
+            var options = this.model.get('options');
+            console.log(target);
+            console.log(options);
+            this.analyzeModel = new Models.Dataset();
+            this.analyzeModel.get('options').get('data').target =
+                this.analyzeTargets(target);
+            this.analyzeChild = new Views.Widget({
+                model: this.analyzeModel
+            });
+            var that = this;
+            this.analyzeChild.$el.dialog({
+                modal: true,
+                resizable: false,
+                draggable: true,
+                height: parseInt(this.$el.css('height')),
+                width: parseInt(this.$el.css('width'))
+            });
+        },
+        analyzeTargets: function(target) {
+            return [
+                target,
+                'holtWintersForecast(' + target + ')',
+                'holtWintersAberration(' + target + ')'
+            ];
         }
     });
 })(jQuery);

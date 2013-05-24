@@ -5,14 +5,21 @@ Models = window.Models || {};
 
     /* Dataset, request handler */
     Models.Dataset = Backbone.Model.extend({
-        initialize: function() {
-            // Graphite API options
-            this.set('options', new Options.Ajax({
+        defaults: {
+            'options': new Options.Ajax({
                 data: {
                     target: ['statsd.yastatsd.*.count']
                 }
-            }));
+            })
         },
+        //initialize: function() {
+        //    // Graphite API options
+        //    this.set('options', new Options.Ajax({
+        //        data: {
+        //            target: ['statsd.yastatsd.*.count']
+        //        }
+        //    }));
+        //},
         /* range: boolean, update full range graph */
         fetch: function(range) {
             var that = this;
