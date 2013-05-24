@@ -29,11 +29,11 @@ requirejs.config({
         'libs/jquery.flot.pie': {
             deps: ['libs/jquery.flot']
         },
-        'models/model': {
-            deps: ['libs/jquery', 'libs/backbone']
-        },
         'models/options': {
             deps: ['libs/jquery', 'libs/backbone']
+        },
+        'models/model': {
+            deps: ['libs/jquery', 'libs/backbone', 'models/options']
         },
         'views/view': {
             deps: ['libs/jquery', 'libs/backbone', 'models/model',
@@ -51,9 +51,9 @@ requirejs.config({
 define(
     ['libs/underscore', 'libs/backbone', 'libs/jquery-ui', 'libs/jquery.flot',
      'libs/jquery.flot.time', 'libs/jquery.flot.selection', 'libs/jquery.flot.pie',
-     'models/model', 'models/options', 'views/view', 'script'],
+     'models/options', 'models/model', 'views/view', 'script'],
     function(underscoreLocal, backboneLocal, uiLocal, flotLocal,
         flotTimeLocal, flotSelectionLocal, flotPieLocal,
-        modelsLocal, optionsLocal, viewsLocal, scriptLocal) {
+        optionsLocal, modelsLocal, viewsLocal, scriptLocal) {
     }
 );

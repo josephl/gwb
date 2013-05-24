@@ -47,6 +47,10 @@
     margin-left: -0.3em;
 }
 
+.stats.panel {
+    margin-left: 30px;
+}
+
 .stats.panel ul {
     -webkit-padding-start: 0px;
     margin-top: 4px;
@@ -93,13 +97,17 @@ div.selectable {
     margin-top: 30px;
 }
 
+span.mins {
+    font-size: 0.7em;
+}
+
 div.hour {
     display: inline-block;
     width: 26px;
     height: 20px;
     margin: 0px;
     padding-left: 4px;
-    font-size: 0.7em;
+    font-size: 0.8em;
     border-right: 0px;
     border-top: 0px;
 }
@@ -108,3 +116,9 @@ div.hour {
     background: rgb(175, 216, 248);
     color: white;
 }
+
+.stat-button, .stats.panel label {
+    margin: 4px;
+    width: 90%;
+}
+
