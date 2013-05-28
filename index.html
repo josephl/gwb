@@ -42,7 +42,7 @@
         <div class="selectable dayrange span9">
             <% for (var i = 0; i < 24; i++) { %>
                 <div class="hour ui-widget-content" id="<%= i %>">
-                    <%= i %><span class="mins">:00</span></div>
+                    <%= i %><span class="mins" style="pointer-events:none;">:00</span></div>
                 <% } %>
         </div>
     </script>
