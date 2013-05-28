@@ -74,6 +74,8 @@
 .stats.panel h3, .ui-accordion-content {
     background-color: white;
     border: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 input.target {
@@ -122,3 +124,27 @@ div.hour {
     width: 90%;
 }
 
+.corr-matrix {
+    margin-top: 30px;
+}
+
+.corr-matrix table {
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    /*height: 200px;
+    table-layout: fixed;
+    width: 100%;*/
+}
+
+.corr-matrix table td.corr-cell {
+    padding: 4px;
+}
+
+.corr-matrix .color-col {
+    height: 4px;
+}
+
+.corr-matrix .color-row {
+    width: 4px;
+}

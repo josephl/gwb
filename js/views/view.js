@@ -341,6 +341,32 @@ Views = window.Views || {};
         }
     });
 
+    /* Correlation Matrix View */
+    Views.CorrMatrix = Backbone.View.extend({
+        tagName: 'div',
+        className: 'corr-matrix',
+        template: _.template($('#corr-matrix-template').html()),
+        initialize: function() {
+            this.model.on('change:mainStats', this.render, this);
+            this.model.on('change:colors', this.colorize, this);
+        },
+        render: function() {
+            console.log('corrmatrix render');
+            this.$el.empty();
+            this.$el.append(this.template({
+                stats: _.map(this.model.get('mainStats'), function(s) {
+                    return s.corr;
+                }),
+                colors: this.colors
+            }));
+            this.$el.show();
+            return this;
+        },
+        colorize: function() {
+            console.log('corrmatrix colorize');
+            this.colors = this.model.get('colors');
+        }
+    });
 
     /* Widget View
      * Top-level container */
@@ -378,6 +404,10 @@ Views = window.Views || {};
             });
             this.dayRange = new Views.DayRange({
                 el: $('.selectable.dayrange', this.$el),
+                model: this.model
+            });
+            this.corrMatrix = new Views.CorrMatrix({
+                el: $('.corr-matrix', this.$el),
                 model: this.model
             });
             /* event handlers */

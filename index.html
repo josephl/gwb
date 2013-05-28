@@ -36,6 +36,7 @@
             <div class="column span3" id="panel" style="padding-left:20px">
                 <div class="pie graph span3"></div>
                 <div class="stats panel span3"></div>
+                <div class="corr-matrix span3" id="corrs"></div>
             </div>
         </div>
         <div class="selectable dayrange span9">
@@ -72,7 +73,29 @@
             <label for="freq2">Hour</label>
         </input>
     </script>
-        
+
+    <script type="text/template" id="corr-matrix-template">
+        <div style="text-align: center">Correlation Matrix</div>
+        <table>
+            <tr>
+                <td></td>
+                <% for (var i = 0; i < stats.length; i++) { %>
+                    <td class="color-col" style="background:<%- colors[i] %>"></td>
+                <% } %>
+            </tr>
+            <% for (var i = 0; i < stats.length; i++) { %>
+            <tr>
+                <td class="color-row" style="background:<%- colors[i] %>"></td>
+                <% for (var j = 0; j < stats.length; j++) { %>
+                <td class="corr-cell"
+                    style="background: rgba(<% if (stats[i][j] < 0) { %> 255, 0, 0 <% } else { %> 0, 0, 0 <% } %>, <%- Math.abs(stats[i][j]) %>); color: <% if (Math.abs(stats[i][j]) > 0.5) { %> white <% } else { %> black <% } %>;">
+                    <%- parseFloat(stats[i][j]).toFixed(2) %>
+                </td>
+                <% } %>
+            </tr>
+            <% } %>
+        </table>
+    </script>
 
 </body>
 </html>
