@@ -249,12 +249,9 @@ Views = window.Views || {};
     Views.FreqToggle = Backbone.View.extend({
         tagName: 'div',
         className: 'freq',
+        template: _.template($('#freq-template').html()),
         initialize: function() {
-            var inputs = $('<input type="checkbox" id="freq1" value="D" />' +
-                           '<label for="freq1">Day</label>' +
-                           '<input type="checkbox" id="freq2" value="H" />' +
-                           '<label for="freq2">Hour</label>');
-            this.$el.append(inputs);
+            this.$el.append(this.template());
             this.$el.buttonset();
         },
         events: {
